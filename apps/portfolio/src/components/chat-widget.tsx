@@ -25,6 +25,9 @@ const WELCOME: Message = {
 
 const SUGGESTIONS = ["What are his skills?", "Tell me about his projects", "How to contact him?"];
 
+// Shown in the nudge bubble before the user opens chat
+const NUDGE_TEXT = "👋 Hi! Need help finding anything?";
+
 // ── Sub-components ────────────────────────────────────────────────────────────
 
 function TypingIndicator() {
@@ -101,9 +104,45 @@ export default function ChatWidget() {
   const [messages, setMessages] = useState<Message[]>([WELCOME]);
   const [input, setInput]       = useState("");
   const [loading, setLoading]   = useState(false);
+  const [nudge, setNudge]       = useState(false);
 
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef       = useRef<HTMLInputElement>(null);
+  const messagesEndRef  = useRef<HTMLDivElement>(null);
+  const inputRef        = useRef<HTMLInputElement>(null);
+  const originalTitle   = useRef<string>("");
+  const tabBlinkRef     = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Show nudge bubble after 4 s, dismiss after 10 s
+  useEffect(() => {
+    const showTimer = setTimeout(() => setNudge(true), 4000);
+    const hideTimer = setTimeout(() => setNudge(false), 14000);
+    return () => { clearTimeout(showTimer); clearTimeout(hideTimer); };
+  }, []);
+
+  // Blink tab title when nudge appears (and chat is closed)
+  useEffect(() => {
+    if (!nudge || open) return;
+
+    originalTitle.current = document.title;
+    let toggled = false;
+
+    tabBlinkRef.current = setInterval(() => {
+      document.title = toggled ? originalTitle.current : "💬 Chat with Billal's AI";
+      toggled = !toggled;
+    }, 1500);
+
+    return () => {
+      if (tabBlinkRef.current) clearInterval(tabBlinkRef.current);
+      document.title = originalTitle.current;
+    };
+  }, [nudge, open]);
+
+  // Stop tab blink when user opens chat
+  function openChat() {
+    setOpen(true);
+    setNudge(false);
+    if (tabBlinkRef.current) clearInterval(tabBlinkRef.current);
+    if (originalTitle.current) document.title = originalTitle.current;
+  }
 
   // Lock body scroll when chat is open on mobile
   useEffect(() => {
@@ -270,6 +309,18 @@ export default function ChatWidget() {
 
       {/* ── Desktop floating panel (sm+) ── */}
       <div className="fixed bottom-6 right-6 z-50 hidden sm:flex flex-col items-end gap-3">
+
+        {/* Nudge bubble */}
+        {nudge && !open && (
+          <button
+            onClick={openChat}
+            className="chat-desktop max-w-[220px] text-left px-4 py-3 rounded-2xl rounded-br-sm bg-gray-800 border border-white/10 shadow-xl text-sm text-white leading-snug hover:bg-gray-700 transition"
+          >
+            {NUDGE_TEXT}
+            <span className="block text-xs text-gray-400 mt-1">Click to chat →</span>
+          </button>
+        )}
+
         {open && (
           <div className="chat-desktop w-[360px] h-[520px] flex flex-col rounded-2xl border border-white/10 bg-gray-900/95 backdrop-blur-xl shadow-2xl shadow-black/50 overflow-hidden">
             {/* Header */}
@@ -346,11 +397,15 @@ export default function ChatWidget() {
 
         {/* Toggle button */}
         <button
-          onClick={() => setOpen((v) => !v)}
+          onClick={() => open ? setOpen(false) : openChat()}
           className="relative size-14 rounded-full bg-green-500 hover:bg-green-400 text-white shadow-lg shadow-green-500/30 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 animate-glow"
           aria-label={open ? "Close chat" : "Open chat"}
         >
           {!open && <span className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-20" />}
+          {/* Unread dot — shown when nudge is active */}
+          {nudge && !open && (
+            <span className="absolute -top-0.5 -right-0.5 size-4 rounded-full bg-red-500 border-2 border-gray-900 flex items-center justify-center text-[9px] font-bold text-white">1</span>
+          )}
           <span className={`absolute transition-all duration-200 ${open ? "opacity-100 scale-100" : "opacity-0 scale-75"}`}>
             <IconX className="size-5" />
           </span>
@@ -360,16 +415,29 @@ export default function ChatWidget() {
         </button>
       </div>
 
-      {/* ── Mobile toggle button (< sm) — only when chat is closed ── */}
+      {/* ── Mobile: nudge bubble + toggle button (< sm, chat closed) ── */}
       {!open && (
-        <button
-          onClick={() => setOpen(true)}
-          className="sm:hidden fixed bottom-5 right-5 z-50 size-14 rounded-full bg-green-500 text-white shadow-lg shadow-green-500/30 flex items-center justify-center transition-all duration-300 active:scale-95 animate-glow"
-          aria-label="Open chat"
-        >
-          <span className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-20" />
-          <IconChat className="size-6" />
-        </button>
+        <div className="sm:hidden fixed bottom-5 right-5 z-50 flex flex-col items-end gap-2">
+          {nudge && (
+            <button
+              onClick={openChat}
+              className="chat-mobile max-w-[200px] text-left px-4 py-3 rounded-2xl rounded-br-sm bg-gray-800 border border-white/10 shadow-xl text-sm text-white leading-snug active:scale-95 transition"
+            >
+              {NUDGE_TEXT}
+            </button>
+          )}
+          <button
+            onClick={openChat}
+            className="relative size-14 rounded-full bg-green-500 text-white shadow-lg shadow-green-500/30 flex items-center justify-center transition-all duration-300 active:scale-95 animate-glow"
+            aria-label="Open chat"
+          >
+            <span className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-20" />
+            {nudge && (
+              <span className="absolute -top-0.5 -right-0.5 size-4 rounded-full bg-red-500 border-2 border-gray-900 flex items-center justify-center text-[9px] font-bold text-white">1</span>
+            )}
+            <IconChat className="size-6" />
+          </button>
+        </div>
       )}
     </>
   );
