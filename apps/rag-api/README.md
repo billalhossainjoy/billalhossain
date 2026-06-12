@@ -1,6 +1,6 @@
 # rag-api
 
-Cloudflare Worker (Hono) that powers the AI chat assistant on [billalhossain.dev](https://billalhossain.dev).
+Cloudflare Worker (Hono) that powers the AI chat assistant on [billalhossain.dev](https://billal.space).
 
 ## RAG pipeline
 

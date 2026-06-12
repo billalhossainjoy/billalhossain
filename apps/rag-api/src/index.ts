@@ -5,7 +5,7 @@ import sync from "./routes/sync.js";
 
 const app = new Hono<{ Bindings: CloudflareBindings }>();
 
-app.use("*", cors({ origin: ["http://localhost:3000", "https://billalhossain.dev"] }));
+app.use("*", cors({ origin: ["http://localhost:3000", "https://billal.space"] }));
 
 app.get("/", (c) => c.json({ status: "ok", service: "billal-rag-api" }));
 

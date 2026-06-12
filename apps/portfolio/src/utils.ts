@@ -10,6 +10,6 @@ export function siteUrl(contactWebsite = ""): string {
   return (
     process.env["NEXT_PUBLIC_SITE_URL"] ||
     contactWebsite ||
-    "https://billalhossain.dev"
+    "https://billal.space"
   );
 }

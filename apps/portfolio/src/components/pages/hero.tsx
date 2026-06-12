@@ -99,7 +99,7 @@ const Hero = async () => {
 
                 {/* Right — photo + socials */}
                 <div className={"flex flex-col items-center gap-5 animate-scale-in shrink-0"} style={d(150)}>
-                    <div className={"relative w-56 h-56 lg:w-72 lg:h-72"}>
+                    <div className={"relative w-64 h-64 sm:w-72 sm:h-72 lg:w-96 lg:h-96"}>
                         <div className={"absolute -inset-4 rounded-3xl blur-2xl bg-green-500/20 animate-glow"} />
                         <div
                             className={"absolute -inset-[3px] rounded-[18px]"}
@@ -110,6 +110,7 @@ const Hero = async () => {
                                 src={tech}
                                 alt={`${hero.name} — ${hero.title}`}
                                 fill
+                                sizes="(max-width: 640px) 256px, (max-width: 1024px) 288px, 384px"
                                 className={"object-cover"}
                                 priority
                             />

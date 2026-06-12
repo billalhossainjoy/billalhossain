@@ -2,7 +2,7 @@
 
 Personal portfolio monorepo built with **Next.js 15**, **Cloudflare Workers**, and a fully **markdown-driven content system** with an **AI-powered RAG chat assistant**.
 
-🌐 **Live:** [billalhossain.dev](https://billalhossain.dev)
+🌐 **Live:** [billalhossain.dev](https://billal.space)
 
 ---
 
@@ -180,7 +180,7 @@ Then add an import + entry in `packages/content/src/worker.ts` and re-sync.
 Set these environment variables in the Vercel dashboard:
 
 ```
-NEXT_PUBLIC_SITE_URL=https://billalhossain.dev
+NEXT_PUBLIC_SITE_URL=https://billal.space
 NEXT_PUBLIC_RAG_API_URL=https://rag-api.<subdomain>.workers.dev
 RAG_API_URL=https://rag-api.<subdomain>.workers.dev
 SEED_SECRET=<strong-random-secret>

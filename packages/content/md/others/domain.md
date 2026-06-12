@@ -2,14 +2,14 @@
 title: "Portfolio Website & Deployment"
 ---
 
-Billal Hossain's portfolio website is live at https://billalhossain.dev.
+Billal Hossain's portfolio website is live at https://billal.space.
 
 The portfolio is built with Next.js 15 (App Router), TypeScript, and Tailwind CSS v4. It is deployed on Vercel and served globally through Cloudflare's CDN.
 
 Key URLs:
-- Portfolio home: https://billalhossain.dev
-- Resume / CV page: https://billalhossain.dev/resume
-- Resume PDF download: https://billalhossain.dev/resume.pdf
+- Portfolio home: https://billal.space
+- Resume / CV page: https://billal.space/resume
+- Resume PDF download: https://billal.space/resume.pdf
 
 The website includes:
 - An AI-powered chat assistant (bottom-right corner) that can answer questions about Billal in real time, powered by Cloudflare Workers AI and Vectorize (RAG).

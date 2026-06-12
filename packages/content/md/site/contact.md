@@ -1,7 +1,7 @@
 ---
 email:   "bilalhossain.bhj@gmail.com"
 phone:   "+880 1516 500653"
-website: "https://billalhossain.dev"
+website: "https://billal.space"
 
 # Section header
 heading:     "Get In Touch"
