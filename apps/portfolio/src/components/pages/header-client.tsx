@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useEffect, useRef, useState } from 'react';
+import Link from "next/link";
 import { scroller } from "@/utils";
 import { HiMenu, HiX } from "react-icons/hi";
 import { twMerge } from "tailwind-merge";
@@ -100,12 +101,12 @@ const Header: React.FC<{ name: string; initials: string; email: string }> = ({ n
                                 {label}
                             </button>
                         ))}
-                        <a
+                        <Link
                             href={"/resume"}
                             className={"px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-300 text-white/60 hover:text-white hover:bg-white/10"}
                         >
                             Resume
-                        </a>
+                        </Link>
                     </nav>
 
                     {/* Right side: hire me + hamburger */}
@@ -156,13 +157,13 @@ const Header: React.FC<{ name: string; initials: string; email: string }> = ({ n
                             {label}
                         </button>
                     ))}
-                    <a
+                    <Link
                         href={"/resume"}
                         onClick={() => setMenuOpen(false)}
                         className={"text-2xl font-semibold text-white/70 hover:text-white transition duration-300"}
                     >
                         Resume
-                    </a>
+                    </Link>
                     <a
                         href={`mailto:${email}`}
                         className={"mt-4 inline-flex items-center gap-2 px-8 h-12 rounded-full bg-green-500 hover:bg-green-400 text-gray-900 font-bold text-base transition duration-300"}
