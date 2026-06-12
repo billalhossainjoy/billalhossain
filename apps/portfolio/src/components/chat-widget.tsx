@@ -111,36 +111,40 @@ export default function ChatWidget() {
   const originalTitle   = useRef<string>("");
   const tabBlinkRef     = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Show nudge bubble after 4 s, dismiss after 10 s
+  // Show nudge bubble after 4 s, auto-hide bubble after 10 s
+  // Tab blink starts at 4 s and keeps going until the user opens chat
   useEffect(() => {
-    const showTimer = setTimeout(() => setNudge(true), 4000);
-    const hideTimer = setTimeout(() => setNudge(false), 14000);
-    return () => { clearTimeout(showTimer); clearTimeout(hideTimer); };
-  }, []);
+    const showTimer = setTimeout(() => {
+      setNudge(true);
 
-  // Blink tab title when nudge appears (and chat is closed)
-  useEffect(() => {
-    if (!nudge || open) return;
+      // Start tab blink — runs until openChat() clears it
+      originalTitle.current = document.title;
+      let toggled = false;
+      tabBlinkRef.current = setInterval(() => {
+        document.title = toggled ? originalTitle.current : "💬 Chat with Billal's AI";
+        toggled = !toggled;
+      }, 1500);
+    }, 4000);
 
-    originalTitle.current = document.title;
-    let toggled = false;
-
-    tabBlinkRef.current = setInterval(() => {
-      document.title = toggled ? originalTitle.current : "💬 Chat with Billal's AI";
-      toggled = !toggled;
-    }, 1500);
+    // Only hide the bubble, not the tab blink
+    const hideNudgeTimer = setTimeout(() => setNudge(false), 14000);
 
     return () => {
+      clearTimeout(showTimer);
+      clearTimeout(hideNudgeTimer);
       if (tabBlinkRef.current) clearInterval(tabBlinkRef.current);
-      document.title = originalTitle.current;
+      document.title = originalTitle.current || document.title;
     };
-  }, [nudge, open]);
+  }, []);
 
   // Stop tab blink when user opens chat
   function openChat() {
     setOpen(true);
     setNudge(false);
-    if (tabBlinkRef.current) clearInterval(tabBlinkRef.current);
+    if (tabBlinkRef.current) {
+      clearInterval(tabBlinkRef.current);
+      tabBlinkRef.current = null;
+    }
     if (originalTitle.current) document.title = originalTitle.current;
   }
 
