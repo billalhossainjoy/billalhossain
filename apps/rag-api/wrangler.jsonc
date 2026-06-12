@@ -1,0 +1,28 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "rag-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-06-12",
+  "compatibility_flags": ["nodejs_compat"],
+  "rules": [
+    { "type": "Text", "globs": ["**/*.md"], "fallthrough": false }
+  ],
+  "vars": {
+    "SEED_SECRET": "change-me-before-deploying"
+  },
+  "ai": {
+    "binding": "AI",
+    "remote": true
+  },
+  "vectorize": [
+    {
+      "binding": "VECTORIZE",
+      "index_name": "billal-knowledge-index",
+      "remote": true
+    }
+  ],
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  }
+}

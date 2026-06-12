@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+@layer base {
+    .nav-item {
+        @apply px-4 py-1.5 rounded-full text-white/70 text-sm font-semibold hover:bg-white/10 hover:text-white transition duration-300
+    }
+    .hero-ring {
+        @apply absolute inset-0 border-2 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border-emerald-300/5 shadow-[0_0_80px_inset] shadow-emerald-300/5
+    }
+    .input {
+        @apply w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-gray-500 focus:border-green-500/60 focus:outline-none transition
+    }
+    .label {
+        @apply block text-sm font-medium text-gray-300
+    }
+}
+
+html { scroll-behavior: smooth; }
+
+/* ─── Print / Resume ───────────────────────────────────────── */
+@media print {
+    .no-print { display: none !important; }
+    body { background: white !important; color: black !important; }
+    a { color: inherit !important; text-decoration: none !important; }
+    @page {
+        margin: 12mm 15mm;
+        size: A4;
+    }
+}
+
+/* ─── Keyframes ────────────────────────────────────────────────── */
+
+@keyframes fadeIn {
+    from { opacity:0 }
+    to   { opacity:1 }
+}
+@keyframes fadeUp {
+    from { opacity:0; transform:translateY(40px) scale(0.97); filter:blur(4px) }
+    to   { opacity:1; transform:translateY(0)    scale(1);    filter:blur(0px) }
+}
+@keyframes fadeDown {
+    from { opacity:0; transform:translateY(-24px); filter:blur(4px) }
+    to   { opacity:1; transform:translateY(0);     filter:blur(0px) }
+}
+@keyframes fadeLeft {
+    from { opacity:0; transform:translateX(44px) scale(0.97); filter:blur(4px) }
+    to   { opacity:1; transform:translateX(0)    scale(1);    filter:blur(0px) }
+}
+@keyframes fadeRight {
+    from { opacity:0; transform:translateX(-44px) scale(0.97); filter:blur(4px) }
+    to   { opacity:1; transform:translateX(0)     scale(1);    filter:blur(0px) }
+}
+@keyframes scaleIn {
+    from { opacity:0; transform:scale(0.82) rotate(-2deg); filter:blur(3px) }
+    to   { opacity:1; transform:scale(1)    rotate(0deg);  filter:blur(0px) }
+}
+@keyframes flipUp {
+    from { opacity:0; transform:perspective(500px) rotateX(-55deg) translateY(28px); filter:blur(4px) }
+    to   { opacity:1; transform:perspective(500px) rotateX(0deg)   translateY(0);    filter:blur(0px) }
+}
+@keyframes blob {
+    0%,100% { transform:translate(0,0)      scale(1);    }
+    33%     { transform:translate(28px,-26px) scale(1.08); }
+    66%     { transform:translate(-18px,18px) scale(0.94); }
+}
+@keyframes drawLine {
+    from { width:0; opacity:0 }
+    to   { width:100%; opacity:1 }
+}
+@keyframes glow {
+    0%,100% { box-shadow:0 0 14px rgba(74,222,128,.15) }
+    50%     { box-shadow:0 0 32px rgba(74,222,128,.35), 0 0 60px rgba(74,222,128,.15) }
+}
+@keyframes shimmer {
+    0%   { background-position:-200% center }
+    100% { background-position: 200% center }
+}
+@keyframes modalIn {
+    from { opacity:0; transform:scale(0.88) translateY(16px); filter:blur(6px) }
+    to   { opacity:1; transform:scale(1)    translateY(0);    filter:blur(0px) }
+}
+
+/* ─── Utility animation classes ────────────────────────────────── */
+
+@layer utilities {
+    .animate-fade-up    { animation: fadeUp   0.75s cubic-bezier(0.23,1,0.32,1) both; }
+    .animate-fade-down  { animation: fadeDown 0.65s cubic-bezier(0.23,1,0.32,1) both; }
+    .animate-fade-left  { animation: fadeLeft 0.75s cubic-bezier(0.23,1,0.32,1) both; }
+    .animate-fade-right { animation: fadeRight 0.75s cubic-bezier(0.23,1,0.32,1) both; }
+    .animate-scale-in   { animation: scaleIn  0.55s cubic-bezier(0.34,1.56,0.64,1) both; }
+    .animate-flip-up    { animation: flipUp   0.65s cubic-bezier(0.23,1,0.32,1) both; }
+    .animate-blob       { animation: blob 7s ease-in-out infinite; }
+    .animate-glow       { animation: glow 3s ease-in-out infinite; }
+}

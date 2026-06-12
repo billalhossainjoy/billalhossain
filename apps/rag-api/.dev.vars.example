@@ -1,0 +1,12 @@
+# ─────────────────────────────────────────────────────────────
+# rag-api — local development secrets (Cloudflare Workers)
+# Copy this file to .dev.vars and fill in your values.
+# .dev.vars is gitignored — never commit real secrets.
+# ─────────────────────────────────────────────────────────────
+# Wrangler reads .dev.vars automatically during `wrangler dev`.
+# In production, set secrets with: wrangler secret put SEED_SECRET
+# ─────────────────────────────────────────────────────────────
+
+# Secret that protects POST /sync from unauthorized access.
+# Must match SEED_SECRET in apps/portfolio/.env.local.
+SEED_SECRET=change-me

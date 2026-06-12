@@ -11,6 +11,8 @@ node_modules
 .env.development.local
 .env.test.local
 .env.production.local
+# Cloudflare Workers local secrets
+.dev.vars
 
 # Testing
 coverage
