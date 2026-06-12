@@ -1,159 +1,224 @@
-# Turborepo starter
+# Billal Hossain — Portfolio 2.0
 
-This Turborepo starter is maintained by the Turborepo core team.
+Personal portfolio monorepo built with **Next.js 15**, **Cloudflare Workers**, and a fully **markdown-driven content system** with an **AI-powered RAG chat assistant**.
 
-## Using this example
+🌐 **Live:** [billalhossain.dev](https://billalhossain.dev)
 
-Run the following command:
+---
 
-```sh
-npx create-turbo@latest
+## Monorepo structure
+
+```
+billalhossain/
+├── apps/
+│   ├── portfolio/          # Next.js 15 App Router — the portfolio website
+│   └── rag-api/            # Cloudflare Worker (Hono) — AI chat backend
+│
+└── packages/
+    ├── content/            # Shared markdown content layer
+    │   ├── md/
+    │   │   ├── site/       # Hero, about, skills, contact, footer, resume
+    │   │   ├── projects/   # One .md file per project
+    │   │   ├── experience/ # One .md file per role
+    │   │   ├── gallery/    # One .md file per image
+    │   │   └── others/     # RAG-only context (interests, faq, philosophy, domain)
+    │   └── src/
+    │       ├── types.ts    # TypeScript interfaces for all frontmatter
+    │       ├── parser.ts   # Pure parse functions + RAG chunk builder
+    │       ├── server.ts   # Node.js reader using fs (Next.js server components)
+    │       └── worker.ts   # Cloudflare Worker reader (static md imports)
+    ├── eslint-config/      # Shared ESLint config
+    └── typescript-config/  # Shared tsconfig bases
 ```
 
-## What's inside?
+---
 
-This Turborepo includes the following packages/apps:
+## Apps
 
-### Apps and Packages
+### `portfolio` — Next.js 15
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+The main portfolio website. **Every piece of content comes from markdown files** — zero hardcoded personal data in any component.
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+| Section | Source file |
+|---------|------------|
+| Hero | `md/site/hero.md` |
+| About + stats | `md/site/about.md` |
+| Skills | `md/site/skills.md` |
+| Contact cards | `md/site/contact.md` |
+| Footer | `md/site/footer.md` |
+| Resume + PDF | `md/site/resume.md` |
+| Projects | `md/projects/*.md` |
+| Experience | `md/experience/*.md` |
+| Gallery | `md/gallery/*.md` |
 
-### Utilities
+**Features:**
+- `force-dynamic` + `unstable_noStore()` — md edits appear on refresh, no restart
+- AI chat widget (bottom-right) connected to the RAG API
+- Dev sync panel (bottom-left, dev only) — re-embeds content into Vectorize
+- `/resume` route — PDF viewer with Download + Share buttons
+- SEO: `generateMetadata()`, JSON-LD `Person` schema, sitemap, robots.txt
 
-This Turborepo has some additional tools already setup for you:
+**Tech:** Next.js 15, React 19, TypeScript, Tailwind CSS v4, gray-matter
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+---
+
+### `rag-api` — Cloudflare Worker
+
+Hono-based Cloudflare Worker that powers the portfolio's AI chat assistant using a full RAG pipeline.
+
+**Endpoints:**
+
+| Route | Method | Description |
+|-------|--------|-------------|
+| `GET /` | — | Health check |
+| `POST /sync` | `x-seed-secret` header | Embeds all knowledge chunks into Vectorize |
+| `POST /ask` | `{ "question": "..." }` | Semantic search → Llama 3.1 → answer |
+
+**RAG pipeline:**
+1. `POST /sync` — reads knowledge chunks from `@repo/content/worker`, embeds each with `@cf/baai/bge-small-en-v1.5` (384-dim), upserts into Vectorize
+2. `POST /ask` — embeds question → queries Vectorize (top-5) → builds grounded prompt → calls `@cf/meta/llama-3.1-8b-instruct-fp8` → returns answer
+
+**Bindings:** `AI` (Workers AI), `VECTORIZE` (billal-knowledge-index, cosine, 384d)
+
+**Tech:** Cloudflare Workers, Hono, Wrangler 4, Vectorize, Workers AI
+
+---
+
+## Getting started
+
+### Prerequisites
+
+- Node.js >= 20
+- pnpm 11.3.0 (`npm i -g pnpm`)
+- Cloudflare account (for rag-api)
+
+### Install
+
+```bash
+pnpm install
+```
+
+### Environment setup
+
+```bash
+# Portfolio
+cp apps/portfolio/.env.example apps/portfolio/.env.local
+
+# RAG API
+cp apps/rag-api/.dev.vars.example apps/rag-api/.dev.vars
+```
+
+Edit both files and fill in your values.
+
+### Dev
+
+```bash
+# Run all apps
+pnpm dev
+
+# Run individually
+pnpm dev --filter=portfolio
+pnpm dev --filter=rag-api
+```
+
+Portfolio → `http://localhost:3000`
+RAG API → `http://127.0.0.1:8787`
 
 ### Build
 
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo build
+```bash
+pnpm build
 ```
 
-Without global `turbo`, use your package manager:
+---
 
-```sh
-cd my-turborepo
-npx turbo build
-pnpm dlx turbo build
-pnpm exec turbo build
+## Content editing
+
+All content lives in `packages/content/md/`. Edit any markdown file and refresh the browser — changes appear instantly (no restart required).
+
+### Adding a project
+
+1. Create `packages/content/md/projects/my-project.md`
+2. Fill in the frontmatter (see existing files for reference)
+3. Set `published: true`
+4. Add an import in `packages/content/src/worker.ts` + entry in `PROJECT_FILES`
+
+### Re-syncing the AI
+
+After editing content, re-embed it into Vectorize so the chat assistant reflects the changes:
+
+```bash
+# Dev (via the portfolio's proxy route)
+curl -X POST http://localhost:3000/api/sync   # OR click "Sync AI" in the UI
+
+# Direct to Worker
+curl -X POST http://127.0.0.1:8787/sync \
+  -H "x-seed-secret: your-seed-secret"
 ```
 
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
+### Adding RAG-only context
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
+Drop a new `.md` file into `packages/content/md/others/`. The body text becomes a knowledge chunk. Frontmatter:
 
-```sh
-turbo build --filter=docs
+```yaml
+---
+title: "My context title"
+skip: false   # set true to exclude from RAG
+---
+
+Write anything here. The AI will use this to answer visitor questions.
 ```
 
-Without global `turbo`:
+Then add an import + entry in `packages/content/src/worker.ts` and re-sync.
 
-```sh
-npx turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+---
+
+## Deployment
+
+### Portfolio → Vercel
+
+Set these environment variables in the Vercel dashboard:
+
+```
+NEXT_PUBLIC_SITE_URL=https://billalhossain.dev
+NEXT_PUBLIC_RAG_API_URL=https://rag-api.<subdomain>.workers.dev
+RAG_API_URL=https://rag-api.<subdomain>.workers.dev
+SEED_SECRET=<strong-random-secret>
 ```
 
-### Develop
+### RAG API → Cloudflare Workers
 
-To develop all apps and packages, run the following command:
+```bash
+cd apps/rag-api
 
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
+# Create Vectorize index (first time only)
+pnpm wrangler vectorize create billal-knowledge-index \
+  --dimensions=384 --metric=cosine
 
-```sh
-cd my-turborepo
-turbo dev
+# Set production secret
+pnpm wrangler secret put SEED_SECRET
+
+# Deploy
+pnpm deploy
+
+# Seed Vectorize in production
+curl -X POST https://rag-api.<subdomain>.workers.dev/sync \
+  -H "x-seed-secret: <your-seed-secret>"
 ```
 
-Without global `turbo`, use your package manager:
+---
 
-```sh
-cd my-turborepo
-npx turbo dev
-pnpm exec turbo dev
-pnpm exec turbo dev
-```
+## Tech stack
 
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo dev --filter=web
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-pnpm exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-pnpm exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 15 (App Router) |
+| Language | TypeScript 5 |
+| Styling | Tailwind CSS v4 |
+| Content | Markdown + gray-matter |
+| Monorepo | pnpm workspaces + Turborepo |
+| AI Backend | Cloudflare Workers + Hono |
+| Vector DB | Cloudflare Vectorize |
+| LLM | Cloudflare Workers AI (Llama 3.1) |
+| Embeddings | `@cf/baai/bge-small-en-v1.5` |
+| Deployment | Vercel (portfolio) + Cloudflare (rag-api) |

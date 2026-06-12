@@ -11,6 +11,7 @@ const NAV_ITEMS = [
     { label: "Skills",     id: "skills"     },
     // { label: "Experience", id: "experience" },
     { label: "Projects",   id: "projects"   },
+    { label: "Contact",    id: "contact"    },
 ] as const;
 
 const Header: React.FC<{ name: string; initials: string; email: string }> = ({ name, initials, email }) => {
