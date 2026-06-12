@@ -7,9 +7,6 @@
   "rules": [
     { "type": "Text", "globs": ["**/*.md"], "fallthrough": false }
   ],
-  "vars": {
-    "SEED_SECRET": "change-me-before-deploying"
-  },
   "ai": {
     "binding": "AI",
     "remote": true
