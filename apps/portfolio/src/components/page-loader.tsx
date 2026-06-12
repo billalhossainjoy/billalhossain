@@ -26,22 +26,25 @@ export default function PageLoader() {
                 alignItems: "center",
                 justifyContent: "center",
                 flexDirection: "column",
-                gap: "20px",
-                background: "#030712",          // same as bg-gray-950
+                gap: "16px",
+                background: "#030712",
                 opacity:    phase === "fading" ? 0 : 1,
                 transition: "opacity 0.6s ease",
                 pointerEvents: phase === "fading" ? "none" : "all",
+                overflow: "hidden",
+                width: "100%",
+                height: "100dvh",
             }}
         >
             {/* Logo mark */}
             <div style={{
-                width: 64, height: 64,
-                borderRadius: 16,
+                width: 56, height: 56,
+                borderRadius: 14,
                 background: "linear-gradient(135deg, #4ade80, #16a34a)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 22,
+                fontSize: 20,
                 fontWeight: 700,
                 color: "#030712",
                 animation: "loaderPop 0.5s cubic-bezier(0.34,1.56,0.64,1) both",
@@ -51,7 +54,7 @@ export default function PageLoader() {
 
             {/* Progress bar */}
             <div style={{
-                width: 120,
+                width: "min(120px, 50vw)",
                 height: 2,
                 borderRadius: 99,
                 background: "rgba(255,255,255,0.08)",

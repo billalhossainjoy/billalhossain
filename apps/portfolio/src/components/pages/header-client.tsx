@@ -67,13 +67,13 @@ const Header: React.FC<{ name: string; initials: string; email: string }> = ({ n
                         : "bg-transparent"
                 )}
             >
-                <div className={"max-w-7xl mx-auto px-5 h-16 flex items-center justify-between"}>
+                <div className={"max-w-7xl mx-auto px-3 sm:px-5 h-14 sm:h-16 flex items-center justify-between"}>
 
                     {/* Logo / Name */}
                     <button
                         type={"button"}
                         onClick={() => handleNav("public")}
-                        className={"flex items-center gap-2 group"}
+                        className={"flex items-center gap-2 group shrink-0"}
                         aria-label={"Go to top"}
                     >
                         <span className={"size-8 rounded-lg bg-gradient-to-br from-green-400 to-green-700 flex items-center justify-center text-sm font-bold text-gray-900 group-hover:scale-105 transition duration-300"}>
@@ -92,7 +92,7 @@ const Header: React.FC<{ name: string; initials: string; email: string }> = ({ n
                                 type={"button"}
                                 onClick={() => handleNav(id)}
                                 className={twMerge(
-                                    "px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-300",
+                                    "px-3 lg:px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-300",
                                     active === id
                                         ? "bg-white text-gray-900 shadow-sm"
                                         : "text-white/60 hover:text-white hover:bg-white/10"
@@ -103,14 +103,14 @@ const Header: React.FC<{ name: string; initials: string; email: string }> = ({ n
                         ))}
                         <Link
                             href={"/resume"}
-                            className={"px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-300 text-white/60 hover:text-white hover:bg-white/10"}
+                            className={"px-3 lg:px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-300 text-white/60 hover:text-white hover:bg-white/10"}
                         >
                             Resume
                         </Link>
                     </nav>
 
                     {/* Right side: hire me + hamburger */}
-                    <div className={"flex items-center gap-3"}>
+                    <div className={"flex items-center gap-2 sm:gap-3"}>
                         <a
                             href={`mailto:${email}`}
                             className={"hidden sm:inline-flex items-center gap-1.5 px-4 h-9 rounded-full bg-green-500 hover:bg-green-400 text-gray-900 font-semibold text-sm transition duration-300"}

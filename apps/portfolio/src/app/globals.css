@@ -15,7 +15,8 @@
     }
 }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
+body { overflow-x: hidden; }
 
 /* ─── Print / Resume ───────────────────────────────────────── */
 @media print {
@@ -91,4 +92,6 @@ html { scroll-behavior: smooth; }
     .animate-flip-up    { animation: flipUp   0.65s cubic-bezier(0.23,1,0.32,1) both; }
     .animate-blob       { animation: blob 7s ease-in-out infinite; }
     .animate-glow       { animation: glow 3s ease-in-out infinite; }
+    .scrollbar-hide     { -ms-overflow-style: none; scrollbar-width: none; }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
 }

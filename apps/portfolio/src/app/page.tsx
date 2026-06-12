@@ -18,7 +18,7 @@ import DevSyncPanel from "@/components/dev-sync-panel";
 
 export default function Home() {
     return (
-        <div className={"relative"}>
+        <div className={"relative overflow-x-hidden"}>
             <Header />
             <Hero />
             <About />

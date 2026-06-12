@@ -19,7 +19,7 @@ const Hero = async () => {
             className={"relative min-h-[90vh] w-full flex items-center overflow-hidden"}
         >
             {/* ── Background blobs ─────────────────────────────────────── */}
-            <div aria-hidden="true" className={"pointer-events-none absolute inset-0 -z-10"}>
+            <div aria-hidden="true" className={"pointer-events-none absolute inset-0 -z-10 overflow-hidden"}>
                 <div
                     className={"absolute -top-32 -left-40 w-[600px] h-[600px] rounded-full animate-blob opacity-[0.13]"}
                     style={{ background: "radial-gradient(circle at center, #4ade80, transparent 65%)", animationDuration: "9s" }}

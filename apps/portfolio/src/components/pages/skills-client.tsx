@@ -81,8 +81,8 @@ const SkillsClient: React.FC<{ categories: SkillCategory[] }> = ({ categories })
     const currentItems   = resolveSkills(activeCategory?.skills ?? []);
 
     return (
-        <section id={"skills"} className={"pt-24 pb-8 px-6"}>
-            <div className={"max-w-5xl mx-auto space-y-12"}>
+        <section id={"skills"} className={"pt-24 pb-8 px-4 sm:px-6"}>
+            <div className={"max-w-5xl mx-auto space-y-8 sm:space-y-12"}>
 
                 {/* Header */}
                 <div
@@ -93,11 +93,11 @@ const SkillsClient: React.FC<{ categories: SkillCategory[] }> = ({ categories })
                         transform: headerVisible ? "translateY(0)" : "translateY(32px)",
                     }}
                 >
-                    <p className={"font-serif bg-gradient-to-r text-3xl from-green-400 to-green-700 inline-block text-transparent bg-clip-text"}>
+                    <p className={"font-serif bg-gradient-to-r text-2xl sm:text-3xl from-green-400 to-green-700 inline-block text-transparent bg-clip-text"}>
                         Skills
                     </p>
-                    <WordReveal text={"Libraries & Frameworks"} as={"h2"} className={"text-5xl font-bold"} stagger={60} />
-                    <p className={"text-lg text-gray-400"}>Tools and technologies I work with day to day.</p>
+                    <WordReveal text={"Libraries & Frameworks"} as={"h2"} className={"text-3xl sm:text-4xl md:text-5xl font-bold"} stagger={60} />
+                    <p className={"text-base sm:text-lg text-gray-400"}>Tools and technologies I work with day to day.</p>
                 </div>
 
                 {/* Tab bar */}
@@ -109,14 +109,14 @@ const SkillsClient: React.FC<{ categories: SkillCategory[] }> = ({ categories })
                         transitionDelay: "200ms",
                     }}
                 >
-                    <div className={"inline-flex gap-1 p-1 rounded-xl border border-white/10 bg-white/5"}>
+                    <div className={"flex gap-1 p-1 rounded-xl border border-white/10 bg-white/5 overflow-x-auto max-w-full scrollbar-hide"}>
                         {categories.map((cat) => (
                             <button
                                 key={cat.id}
                                 type={"button"}
                                 onClick={() => handleTabChange(cat.id)}
                                 className={twMerge(
-                                    "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300",
+                                    "px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 whitespace-nowrap shrink-0",
                                     activeId === cat.id
                                         ? "bg-white text-gray-900 shadow-sm"
                                         : "text-white/60 hover:text-white hover:bg-white/10"
@@ -124,7 +124,7 @@ const SkillsClient: React.FC<{ categories: SkillCategory[] }> = ({ categories })
                             >
                                 {cat.label}
                                 <span className={twMerge(
-                                    "ml-2 text-xs px-1.5 py-0.5 rounded-full",
+                                    "ml-1.5 sm:ml-2 text-xs px-1.5 py-0.5 rounded-full",
                                     activeId === cat.id
                                         ? "bg-gray-900/20 text-gray-700"
                                         : "bg-white/10 text-white/50"
@@ -139,7 +139,7 @@ const SkillsClient: React.FC<{ categories: SkillCategory[] }> = ({ categories })
                 {/* Grid */}
                 <div
                     key={animKey}
-                    className={"grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3"}
+                    className={"grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3"}
                     style={{ animation: "fadeIn 0.25s ease both" }}
                 >
                     {currentItems.map((skill, i) => (
