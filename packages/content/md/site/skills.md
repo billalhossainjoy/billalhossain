@@ -12,6 +12,7 @@ categories:
       - Redux
       - Expo
       - Jest
+      - Vitest
 
   - id: backend
     label: "Backend"
@@ -26,6 +27,8 @@ categories:
       - Socket.io
       - Appwrite
       - Supabase
+      - Jest
+      - Vitest
 
   - id: databases
     label: "Databases"

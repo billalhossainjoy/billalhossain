@@ -6,7 +6,7 @@ import { VscCode } from "react-icons/vsc";
 import {
     SiNestjs, SiPrisma, SiMongodb, SiExpress, SiApollographql,
     SiExpo, SiReactquery, SiPusher, SiSocketdotio, SiCloudinary,
-    SiArduino, SiShadcnui, SiNginx, SiJest, SiRedis, SiGithubactions, SiRedux, SiAppwrite,
+    SiArduino, SiShadcnui, SiNginx, SiJest, SiVitest, SiRedis, SiGithubactions, SiRedux, SiAppwrite,
     SiHono, SiSqlite, SiOpenai, SiSupabase,
 } from "react-icons/si";
 import { GrGraphQl } from "react-icons/gr";
@@ -38,6 +38,7 @@ export const SKILL_REGISTRY: Record<string, Omit<SkillIconOptions, "label">> = {
     "Redux":        { icon: SiRedux,           background: "#764ABC", color: "#ffffff", url: "https://redux.js.org/"                    },
     "Expo":         { icon: SiExpo,            background: "#404040", color: "#ffffff", url: "https://expo.dev/"                        },
     "Jest":         { icon: SiJest,            background: "#C21325", color: "#ffffff", url: "https://jestjs.io/"                       },
+    "Vitest":       { icon: SiVitest,         background: "#6E9F18", color: "#ffffff", url: "https://vitest.dev/"                      },
 
     // ── Backend ───────────────────────────────────────────────────────────────
     "Node.js":        { icon: FaNodeJs,        background: "#339933",                  url: "https://nodejs.org/"                      },
